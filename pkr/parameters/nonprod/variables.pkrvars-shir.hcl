@@ -18,7 +18,7 @@ virtual_network_resource_group_name ="rg-suqu-packer"
 cg_gallery_name="cgnsuqupacker"
 cg_rg_name="rg-suqu-packer"
 os_disk_size_gb=127
-user_assigned_managed_identities=["/subscriptions/789d295b-2560-48e8-a9f9-dbc056bec9fd/resourcegroups/rg-suqu-packer/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ese-packer-mid-n/subscriptions/3340dada-95cb-400f-960d-12f6c38f8503/resourcegroups/rg-suqu-packer/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-suqu-packer"]
+user_assigned_managed_identities=["/subscriptions/3340dada-95cb-400f-960d-12f6c38f8503/resourcegroups/rg-suqu-packer/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-suqu-packer"]
 storage_account_name="stsuqupacker"
 install_password="SuperSecretPassword*1"
 
