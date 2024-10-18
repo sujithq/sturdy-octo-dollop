@@ -55,8 +55,8 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           ls -la
-          packerPath="$(Pipeline.Workspace)/packer"
-          repoPath="$(Pipeline.Workspace)"
+          packerPath="/packer"
+          repoPath="/"
 
           # Make Files Executable
           echo 'Make Files Executable'
