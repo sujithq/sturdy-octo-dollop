@@ -54,6 +54,7 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+          ls -la
           packerPath="$(Pipeline.Workspace)/packer"
           repoPath="$(Pipeline.Workspace)"
 
