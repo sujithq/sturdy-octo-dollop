@@ -1,0 +1,11 @@
+{
+    "choco": {
+        "common_packages": [
+        ]
+    },
+    "powershellModules": [
+        { "name": "Pester" }
+    ],
+    "windowsFeatures": [
+    ]
+}

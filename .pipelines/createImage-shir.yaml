@@ -1,0 +1,34 @@
+# Define release name for this pipeline
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
+# Define trigger for this pipeline
+# trigger: none
+trigger: 
+  branches:
+    include:
+      - main
+      - feature/*
+  paths:
+    include:
+      - pkr/**/variables.pkrvars-shir.hcl
+      - pkr/**/main-shir.ps1
+      - .pipelines/createImage-shir.yaml
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: template
+    value: azure/createImageWithPacker.yaml
+
+stages:
+# Development Environment
+- template: ${{ variables.template}}
+  parameters:
+    environment: 'NonProd'
+    azureServiceConnection: 'sc-mi'
+    infraFilesFolder: 'pkr'
+    packerConfigFileName: 'configs/config.pkr.hcl'
+    packerTemplateFileName: 'templates/build.template-shir.pkr.hcl'
+    packerVarsFileName: 'variables.pkrvars-shir.hcl'
+    buildScriptName: 'scripts/build.sh'

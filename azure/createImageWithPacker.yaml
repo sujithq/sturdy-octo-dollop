@@ -1,0 +1,86 @@
+# This template can be used to deploy Packer templates to Azure
+
+parameters:
+
+# Environment of the Azure targets
+- name: environment
+  type: string
+
+# Azure service connection with access rights to the resource group/subscription
+- name: azureServiceConnection
+  type: string
+
+# Agent Pool name
+- name: agentPoolName
+  type: string
+  default: ''
+
+# Packer Config File Name
+- name: packerConfigFileName
+  type: string
+
+# Packer Template File Name
+- name: packerTemplateFileName
+  type: string
+
+# Packer Variables File Name
+- name: packerVarsFileName
+  type: string
+
+# Packer folder name
+- name: infraFilesFolder
+  type: string
+  default: 'pkr'
+
+- name: buildScriptName
+  type: string
+  default: 'scripts/build.sh'
+
+stages:
+- stage: Packer_Build_${{ parameters.environment }}
+  displayName: 'Packer  Build - ${{ parameters.environment }}'
+  pool:
+    ${{ if eq(parameters.agentPoolName, '') }}:
+      vmImage: 'ubuntu-latest'
+    ${{ if ne(parameters.agentPoolName, '') }}:
+      name: '${{ parameters.agentPoolName}}'
+  jobs:
+  - job:
+    steps:
+    - checkout: self
+      path: repoFiles
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '${{ parameters.azureServiceConnection }}'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          packerPath="$(Pipeline.Workspace)/${{ parameters.templateCheckoutName }}/packer"
+          repoPath="$(Pipeline.Workspace)/repoFiles"
+
+          # Make Files Executable
+          echo 'Make Files Executable'
+
+          chmod +x $packerPath/fetch-subscription-id.sh
+          chmod +x $packerPath/install.sh
+          chmod +x $packerPath/initialize.sh
+
+          chmod +x $repoPath/${{ parameters.infraFilesFolder }}/${{ parameters.buildScriptName }}
+
+          # Fetch Subscription ID in $(azureSubscriptionId)
+          echo 'Fetch Subscription ID'
+          source $packerPath/fetch-subscription-id.sh
+          
+          # Install Packer
+          echo 'Install Packer'
+          $packerPath/install.sh
+
+          # Initialize Packer
+          echo 'Initialize Packer'
+          $packerPath/initialize.sh $repoPath/${{ parameters.infraFilesFolder }}/${{ parameters.packerConfigFileName }}       
+
+          # Build the Image with Packer
+          echo 'Build the Image with Packer'
+          $repoPath/${{ parameters.infraFilesFolder }}/${{ parameters.buildScriptName }} $azureSubscriptionId $repoPath ${{ parameters.environment }} ${{ parameters.packerTemplateFileName }} ${{ parameters.packerVarsFileName }}
+
+      displayName: 'Build the Image with Packer'
