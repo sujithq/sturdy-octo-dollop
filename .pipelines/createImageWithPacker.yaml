@@ -48,7 +48,6 @@ stages:
   - job:
     steps:
     - checkout: self
-      path: repoFiles
     - task: AzureCLI@2
       inputs:
         azureSubscription: '${{ parameters.azureServiceConnection }}'
@@ -56,7 +55,7 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           packerPath="$(Pipeline.Workspace)/packer"
-          repoPath="$(Pipeline.Workspace)/repoFiles"
+          repoPath="$(Pipeline.Workspace)"
 
           # Make Files Executable
           echo 'Make Files Executable'
