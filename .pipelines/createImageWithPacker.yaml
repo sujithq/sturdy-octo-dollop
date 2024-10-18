@@ -55,7 +55,7 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          packerPath="$(Pipeline.Workspace)/${{ parameters.templateCheckoutName }}/packer"
+          packerPath="$(Pipeline.Workspace)/packer"
           repoPath="$(Pipeline.Workspace)/repoFiles"
 
           # Make Files Executable
