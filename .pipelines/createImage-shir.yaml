@@ -19,7 +19,7 @@ pool:
 
 variables:
   - name: template
-    value: azure/createImageWithPacker.yaml
+    value: createImageWithPacker.yaml
 
 stages:
 # Development Environment
