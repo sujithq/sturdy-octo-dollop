@@ -240,19 +240,7 @@ function Invoke-DownloadWithRetry {
     for ($retries = 20; $retries -gt 0; $retries--) {
         try {
             $attemptStartTime = Get-Date
-          #  (New-Object System.Net.WebClient).DownloadFile($Url, $Path)
-           $httpClient = [System.Net.Http.HttpClient]::new()
-$response = $httpClient.GetAsync($Url, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).Result
-
-if ($response.IsSuccessStatusCode) {
-    $fileStream = [System.IO.File]::Create($Path)
-    $stream = $response.Content.ReadAsStreamAsync().Result
-    $stream.CopyToAsync($fileStream).Wait()
-    $fileStream.Close()
-}
-else {
-    Write-Warning "Download failed with status code $($response.StatusCode)"
-} 
+           (New-Object System.Net.WebClient).DownloadFile($Url, $Path)
             
             # Start-BitsTransfer -Source $Url -Destination $Path -RetryInterval $interval
             $attemptSeconds = [math]::Round(($(Get-Date) - $attemptStartTime).TotalSeconds, 2)
