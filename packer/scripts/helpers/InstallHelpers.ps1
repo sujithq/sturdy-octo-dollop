@@ -96,13 +96,19 @@ function Install-Binary {
         throw "InstallArgs and ExtraInstallArgs parameters cannot be used together."
     }
 
-    $name = $filePath
+    $name = (Resolve-Path $filePath).Path
+
+    if (Test-Path $name) {
+        Write-Host "MSI file exists."
+    } else {
+        Write-Host "MSI file not found at $name."
+    }
 
     # Check if the current user is an administrator
     $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object System.Security.Principal.WindowsPrincipal($currentUser)
     if ($principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Host "Running as Administrator"
+        Write-Host "Running as Administrator ($currentUser)"
     }
     else {
         Write-Host "Not running as Administrator"

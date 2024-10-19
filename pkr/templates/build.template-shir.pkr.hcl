@@ -99,12 +99,12 @@ variable "storage_account_name" {
 
 variable "image_folder" {
   type = string
-  default = "C:/temp/packer"
+  default = "C:\\temp\\packer"
 }
 
 variable "helper_script_folder" {
   type    = string
-  default = "C:/Program Files/WindowsPowerShell/Modules/"
+  default = "C:\\Program Files\\WindowsPowerShell\\Modules\\"
 }
 
 variable "install_password" {

@@ -57,8 +57,8 @@ $CID = get-secret -vault_name $key_vault_name -secret_name "crowd-CID"
 
 # Define file names and their url and installArgs or extraInstallArgs
 $files = [ordered]@{
-    "$scanner" = @{downloadFromStorage = $true; installArgs = @("/install", "/quiet", "/norestart", "/log", "$image_folder/$scanner.log", "CID=$CID", "NO_START=1") }
-    "shir" = @{Url = "https://www.microsoft.com/EN-US/DOWNLOAD/confirmation.aspx?id=39717"; installArgs = @("/i", "/quiet", "/passive", "/log", "$image_folder/shir.log") }
+    "$scanner" = @{downloadFromStorage = $true; installArgs = @("/install", "/quiet", "/norestart", "/log", "$image_folder\\$scanner.log", "CID=$CID", "NO_START=1") }
+    "shir" = @{Url = "https://www.microsoft.com/EN-US/DOWNLOAD/confirmation.aspx?id=39717"; installArgs = @("/i", "/quiet", "/passive", "/log", "$image_folder\\shir.log") }
 }
 
 # Loop through each file name and call Download-File
@@ -89,7 +89,7 @@ foreach ($fileName in $files.Keys) {
         $type = "EXE"
     }
 
-    $logFile = "$image_folder/$fileName.log"
+    $logFile = "$image_folder\$fileName.log"
 
     if ($Url) {
         if ($installArgs) {
