@@ -161,6 +161,8 @@ source "azure-arm" "default" {
   winrm_timeout  = "15m"
   winrm_username = "packer"
 
+  public_ip_sku = "Standard"
+
 
   # virtual_network_resource_group_name = var.virtual_network_resource_group_name
   # virtual_network_name                = var.virtual_network_name

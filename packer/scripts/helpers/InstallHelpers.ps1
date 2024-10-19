@@ -60,14 +60,16 @@ function Install-Binary {
             }
         }
         $filePath = $LocalPath
-    } else {
+    }
+    else {
         if (-not $Type) {
             $Type = ([System.IO.Path]::GetExtension($Url)).Replace(".", "").ToUpper()
             if ($Type -ne "MSI" -and $Type -ne "EXE") {
                 throw "Cannot determine the file type from the URL. Please specify the Type parameter."
             }
             $fileName = [System.IO.Path]::GetFileName($Url)
-        } else {
+        }
+        else {
             $fileName = [System.IO.Path]::GetFileNameWithoutExtension([System.IO.Path]::GetRandomFileName()) + ".$Type".ToLower()
         }
         $filePath = Invoke-DownloadWithRetry -Url $Url -Path "$env:IMAGE_FOLDER/$fileName"
@@ -76,7 +78,8 @@ function Install-Binary {
     if ($PSBoundParameters.ContainsKey('ExpectedSignature')) {
         if ($ExpectedSignature) {
             Test-FileSignature -Path $filePath -ExpectedThumbprint $ExpectedSignature
-        } else {
+        }
+        else {
             throw "ExpectedSignature parameter is specified, but no signature is provided."
         }
     }
@@ -94,6 +97,28 @@ function Install-Binary {
     }
 
     $name = $filePath
+
+    # Check if the current user is an administrator
+    $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object System.Security.Principal.WindowsPrincipal($currentUser)
+    if ($principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Write-Host "Running as Administrator"
+    }
+    else {
+        Write-Host "Not running as Administrator"
+    }
+
+    $file = Get-Acl $name
+    $file.Access | Format-Table IdentityReference, FileSystemRights, AccessControlType
+
+
+    # Set file permissions for the MSI
+    icacls $name /grant "Administrators:F" /T /C
+
+    $file = Get-Acl $name
+    $file.Access | Format-Table IdentityReference, FileSystemRights, AccessControlType
+
+
  
     if ($Type -eq "MSI") {
         # Check the status of the msiserver (Windows Installer) service
@@ -109,19 +134,22 @@ function Install-Binary {
             } until ($service.Status -eq 'Running')           
 
             Write-Host "Windows Installer service started."
-        } else {
+        }
+        else {
             Write-Host "Windows Installer service is already running."
         }
 
         # MSI binaries should be installed via msiexec.exe
         if ($ExtraInstallArgs) {
             $InstallArgs = @('/i', $filePath, '/qn', '/norestart') + $ExtraInstallArgs
-        } elseif (-not $InstallArgs) {
+        }
+        elseif (-not $InstallArgs) {
             Write-Host "No arguments provided for MSI binary. Using default arguments: /i, /qn, /norestart"
             $InstallArgs = @('/i', $filePath, '/qn', '/norestart')
         }
         $filePath = "msiexec.exe"
-    } else {
+    }
+    else {
         # EXE binaries should be started directly
         if ($ExtraInstallArgs) {
             $InstallArgs = $ExtraInstallArgs
@@ -136,14 +164,17 @@ function Install-Binary {
         $installCompleteTime = [math]::Round(($(Get-Date) - $installStartTime).TotalSeconds, 2)
         if ($exitCode -eq 0) {
             Write-Host "Installation successful in $installCompleteTime seconds"
-        } elseif ($exitCode -eq 3010) {
+        }
+        elseif ($exitCode -eq 3010) {
             Write-Host "Installation successful in $installCompleteTime seconds. Reboot is required."
-        } else {
+        }
+        else {
             Write-Host "Installation process returned unexpected exit code: $exitCode"
             Write-Host "Time elapsed: $installCompleteTime seconds"
             exit $exitCode
         }
-    } catch {
+    }
+    catch {
         $installCompleteTime = [math]::Round(($(Get-Date) - $installStartTime).TotalSeconds, 2)
         Write-Host "Installation failed in $installCompleteTime seconds"
     }
@@ -207,7 +238,8 @@ function Invoke-DownloadWithRetry {
             $attemptSeconds = [math]::Round(($(Get-Date) - $attemptStartTime).TotalSeconds, 2)
             Write-Host "Package downloaded in $attemptSeconds seconds"
             break
-        } catch {
+        }
+        catch {
             $attemptSeconds = [math]::Round(($(Get-Date) - $attemptStartTime).TotalSeconds, 2)
             Write-Warning "Package download failed in $attemptSeconds seconds"
             Write-Warning $_.Exception.Message
@@ -502,7 +534,8 @@ function Invoke-ScriptBlockWithRetry {
         try {
             & $Command
             return
-        } catch {
+        }
+        catch {
             Write-Host "There is an error encountered:`n $_"
             $RetryCount--
 
@@ -574,7 +607,8 @@ function Get-GithubReleasesByVersion {
         $releases = Get-Content $localCacheFile | ConvertFrom-Json
         Write-Debug "Found cached releases for ${Repository} in local file"
         Write-Debug "Release count: $($releases.Count)"
-    } else {
+    }
+    else {
         $releases = @()
         $page = 1
         $pageSize = 100
@@ -614,9 +648,11 @@ function Get-GithubReleasesByVersion {
     # Select releases matching version
     if ($Version -eq "latest") {
         $matchingReleases = $releases | Select-Object -First 1
-    } elseif ($Version.Contains("*")) {
+    }
+    elseif ($Version.Contains("*")) {
         $matchingReleases = $releases | Where-Object { $_.version -like "$Version" }
-    } else {
+    }
+    else {
         $matchingReleases = $releases | Where-Object { $_.version -eq "$Version" }
     }
 
@@ -710,7 +746,8 @@ function Resolve-GithubReleaseAssetUrl {
             Write-Host "Performing sorting of urls to find the most recent version matching the pattern"
             $matchedUrl = $matchedUrl | Sort-Object -Descending
             $matchedUrl = $matchedUrl[0]
-        } else {
+        }
+        else {
             throw "Found multiple assets in ${Repository} matching version `"${Version}`" and pattern `"${UrlMatchPattern}`".`nAvailable assets:`n$($matchedUrl -join "`n")"
         }
     }
@@ -784,7 +821,8 @@ function Get-ChecksumFromGithubRelease {
         $matchedLine = $matchedBody.Split("`n") | Where-Object { $_ -like "*$FileName*" }
         if ($matchedLine.Count -gt 1) {
             throw "Found multiple lines matching file name '${FileName}' in body of release ${matchedVersion}."
-        } elseif ($matchedLine.Count -ne 0) {
+        }
+        elseif ($matchedLine.Count -ne 0) {
             break
         }
     }
@@ -795,9 +833,11 @@ function Get-ChecksumFromGithubRelease {
 
     if ($HashType -eq "SHA256") {
         $pattern = "[A-Fa-f0-9]{64}"
-    } elseif ($HashType -eq "SHA512") {
+    }
+    elseif ($HashType -eq "SHA512") {
         $pattern = "[A-Fa-f0-9]{128}"
-    } else {
+    }
+    else {
         throw "Unknown hash type: ${HashType}"
     }
 
@@ -853,15 +893,18 @@ function Get-ChecksumFromUrl {
     $matchedLine = $checksums | Where-Object { $_ -like "*$FileName*" }
     if ($matchedLine.Count -gt 1) {
         throw "Found multiple lines matching file name '${FileName}' in checksum file."
-    } elseif ($matchedLine.Count -eq 0) {
+    }
+    elseif ($matchedLine.Count -eq 0) {
         throw "File name '${FileName}' not found in checksum file."
     }
 
     if ($HashType -eq "SHA256") {
         $pattern = "[A-Fa-f0-9]{64}"
-    } elseif ($HashType -eq "SHA512") {
+    }
+    elseif ($HashType -eq "SHA512") {
         $pattern = "[A-Fa-f0-9]{128}"
-    } else {
+    }
+    else {
         throw "Unknown hash type: ${HashType}"
     }
     Write-Debug "Found line matching file name '${FileName}' in checksum file:`n${matchedLine}"
@@ -936,7 +979,8 @@ function Test-FileChecksum {
 
     if ($fileHash -ne $expectedHash) {
         throw "Checksum verification failed: expected $expectedHash, got $fileHash"
-    } else {
+    }
+    else {
         Write-Verbose "Checksum verification passed"
     }
 }
@@ -987,7 +1031,8 @@ function Test-FileSignature {
 
     if ($signatureMatched) {
         Write-Output "Signature for $Path is valid"
-    } else {
+    }
+    else {
         throw "Signature thumbprint do not match expected."
     }
 }
