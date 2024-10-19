@@ -163,7 +163,7 @@ function Install-Binary {
     }
 
     $installStartTime = Get-Date
-    Write-Host "Starting Install $Name..."
+    Write-Host "Starting Install $Name($filePath, $installArgs) ..."
     try {
         $process = Start-Process -FilePath $filePath -ArgumentList $InstallArgs -Wait -PassThru
         $exitCode = $process.ExitCode
