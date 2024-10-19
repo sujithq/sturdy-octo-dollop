@@ -9,7 +9,7 @@ image_sku="2022-Datacenter"
 image_offer="WindowsServer"
 image_publisher="MicrosoftWindowsServer"
 
-vm_size="Standard_F8s_v2"
+vm_size= "Standard_DS1_v2" # "Standard_F8s_v2"
 mi_rg_name="rg-suqu-packer"
 mi_build_rg_name="rg-suqu-packer-build"
 virtual_network_name="vnet-suqu-packer"
