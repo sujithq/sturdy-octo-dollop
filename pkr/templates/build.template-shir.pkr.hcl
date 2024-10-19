@@ -288,6 +288,7 @@ build {
   # }
 
   provisioner "windows-restart" {
+    check_registry  = true
     restart_timeout = "30m"
   }
 
@@ -469,6 +470,7 @@ build {
   # }
 
   provisioner "windows-restart" {
+    check_registry  = true
     restart_timeout = "30m"
   }
 
@@ -511,6 +513,7 @@ build {
   # }
 
   provisioner "windows-restart" {
+    check_registry  = true
     restart_timeout = "30m"
   }
 
