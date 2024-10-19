@@ -215,34 +215,34 @@ build {
     ]
   }
 
-  provisioner "windows-shell" {
-    inline = [
-      "echo 'Step 02: Create local user ${var.install_user}'",
-      "net user ${var.install_user} ${var.install_password} /add /passwordchg:no /passwordreq:yes /active:yes /Y",
-      "net localgroup Administrators ${var.install_user} /add",
-      # "winrm set winrm/config/service/auth @{Basic=\"true\"}",
-      "winrm get winrm/config/service/auth"
-    ]
-  }
+  # provisioner "windows-shell" {
+  #   inline = [
+  #     "echo 'Step 02: Create local user ${var.install_user}'",
+  #     "net user ${var.install_user} ${var.install_password} /add /passwordchg:no /passwordreq:yes /active:yes /Y",
+  #     "net localgroup Administrators ${var.install_user} /add",
+  #     # "winrm set winrm/config/service/auth @{Basic=\"true\"}",
+  #     "winrm get winrm/config/service/auth"
+  #   ]
+  # }
+# 
+  # provisioner "powershell" {
+  #   inline = [
+  #     "if (-not ((net localgroup Administrators) -contains '${var.install_user}')) { exit 1 }"]
+  # }
 
   provisioner "powershell" {
-    inline = [
-      "if (-not ((net localgroup Administrators) -contains '${var.install_user}')) { exit 1 }"]
-  }
-
-  provisioner "powershell" {
-    elevated_password = "${var.install_password}"
-    elevated_user     = "${var.install_user}"
+    # elevated_password = "${var.install_password}"
+    # elevated_user     = "${var.install_user}"
     inline            = ["bcdedit.exe /set TESTSIGNING ON"]
   }
 
   provisioner "powershell" {
-    elevated_password = "${var.install_password}"
-    elevated_user     = "${var.install_user}"
+    # elevated_password = "${var.install_password}"
+    # elevated_user     = "${var.install_user}"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}"] # "IMAGE_VERSION=${var.image_version}", "IMAGE_OS=${var.image_os}", "AGENT_TOOLSDIRECTORY=${var.agent_tools_directory}", "IMAGEDATA_FILE=${var.imagedata_file}"
     execution_policy = "unrestricted"
     scripts          = [
-      # "${path.root}/../../packer/scripts/build/Configure-WindowsDefender.ps1",
+      "${path.root}/../../packer/scripts/build/Configure-WindowsDefender.ps1",
       "${path.root}/../../packer/scripts/build/Configure-PowerShell.ps1",
       "${path.root}/../../packer/scripts/build/Install-PowerShellModules.ps1",
       "${path.root}/../../packer/scripts/build/Install-WindowsFeatures.ps1",
@@ -309,8 +309,8 @@ build {
   # }
 
   provisioner "powershell" {
-    elevated_password = "${var.install_password}"
-    elevated_user     = "${var.install_user}"
+    # elevated_password = "${var.install_password}"
+    # elevated_user     = "${var.install_user}"
     pause_before     = "2m0s"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}"]
     scripts          = [
@@ -342,8 +342,8 @@ build {
   }
 
   provisioner "powershell" {
-    elevated_password = "${var.install_password}"
-    elevated_user     = "${var.install_user}"
+    # elevated_password = "${var.install_password}"
+    # elevated_user     = "${var.install_user}"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}"]
     scripts          = [
       # "${path.root}/../../packer/scripts/build/Install-ActionsCache.ps1",
@@ -477,8 +477,8 @@ build {
 
   # install additional software
   provisioner "powershell" {
-    elevated_password = "${var.install_password}"
-    elevated_user     = "${var.install_user}"
+    # elevated_password = "${var.install_password}"
+    # elevated_user     = "${var.install_user}"
     script = "${path.root}/../scripts/main-${var.application}.ps1"
     # Pass parameters to the script as environment variables
     environment_vars = [
@@ -515,8 +515,8 @@ build {
   }
 
   provisioner "powershell" {
-    elevated_password = "${var.install_password}"
-    elevated_user     = "${var.install_user}"
+    # elevated_password = "${var.install_password}"
+    # elevated_user     = "${var.install_user}"
     inline = [
       "if( Test-Path $env:SystemRoot\\System32\\Sysprep\\unattend.xml ){ rm $env:SystemRoot\\System32\\Sysprep\\unattend.xml -Force}",
       "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /mode:vm /quiet /quit",

@@ -1,8 +1,8 @@
 application="shir"
 skip_create_image=true
 cg_image_version="1.0.0"
-vm_name="zwesepacktmpn01"
-install_user="zwesepacktmpn01-adm"
+vm_name="zwesepacktmpn02"
+install_user="zwesepacktmpn02-adm"
 cg_image_name="win22-appimg-shir"
 mi_name="win22-appimg-shir"
 image_sku="2022-Datacenter"
