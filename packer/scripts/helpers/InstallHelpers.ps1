@@ -235,7 +235,7 @@ function Invoke-DownloadWithRetry {
 
     Write-Host "Downloading package from $Url to $Path..."
 
-    $interval = 30
+    $interval = 60
     $downloadStartTime = Get-Date
     for ($retries = 20; $retries -gt 0; $retries--) {
         try {
