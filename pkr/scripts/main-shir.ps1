@@ -89,8 +89,6 @@ foreach ($fileName in $files.Keys) {
         $type = "EXE"
     }
 
-    $logFile = "$image_folder\$fileName.log"
-
     if ($Url) {
         if ($installArgs) {
             Install-Binary -Url "$Url" -Type $type -InstallArgs $installArgs
