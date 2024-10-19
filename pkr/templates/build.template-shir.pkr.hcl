@@ -162,9 +162,9 @@ source "azure-arm" "default" {
   winrm_username = "packer"
 
 
-  virtual_network_resource_group_name = var.virtual_network_resource_group_name
-  virtual_network_name                = var.virtual_network_name
-  virtual_network_subnet_name         = var.virtual_network_subnet_name
+  # virtual_network_resource_group_name = var.virtual_network_resource_group_name
+  # virtual_network_name                = var.virtual_network_name
+  # virtual_network_subnet_name         = var.virtual_network_subnet_name
 
   temp_compute_name = var.vm_name
   temp_os_disk_name = join("-", [var.vm_name, "os"])
