@@ -147,11 +147,11 @@ function Install-Binary {
 
         # MSI binaries should be installed via msiexec.exe
         if ($ExtraInstallArgs) {
-            $InstallArgs = @('/i', $filePath, '/qn', '/norestart') + $ExtraInstallArgs
+            $InstallArgs = @('/i', "`"$filePath`"", '/qn', '/norestart') + $ExtraInstallArgs
         }
         elseif (-not $InstallArgs) {
             Write-Host "No arguments provided for MSI binary. Using default arguments: /i, /qn, /norestart"
-            $InstallArgs = @('/i', $filePath, '/qn', '/norestart')
+            $InstallArgs = @('/i', "`"$filePath`"", '/qn', '/norestart')
         }
         $filePath = "msiexec.exe"
     }
