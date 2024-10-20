@@ -1,4 +1,4 @@
-application="shir2"
+application="shir"
 skip_create_image=true
 cg_image_version="1.0.0"
 vm_name="zwesepacktmpn02"
