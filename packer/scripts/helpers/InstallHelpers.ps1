@@ -282,6 +282,7 @@ function Get-ToolsetContent {
 
     $toolsetPath = Join-Path $env:IMAGE_FOLDER "toolset.json"
     $toolsetJson = Get-Content -Path $toolsetPath -Raw
+    Write-Host "$toolsetJson"
     ConvertFrom-Json -InputObject $toolsetJson
 }
 
