@@ -72,7 +72,7 @@ function Install-Binary {
         else {
             $fileName = [System.IO.Path]::GetFileNameWithoutExtension([System.IO.Path]::GetRandomFileName()) + ".$Type".ToLower()
         }
-        $filePath = Invoke-DownloadWithRetry -Url $Url -Path "$env:IMAGE_FOLDER\\$fileName"
+        $filePath = Invoke-DownloadWithRetry -Url $Url -Path "$env:IMAGE_FOLDER\$fileName"
     }
 
     if ($PSBoundParameters.ContainsKey('ExpectedSignature')) {
