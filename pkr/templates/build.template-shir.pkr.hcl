@@ -312,7 +312,7 @@ build {
   provisioner "powershell" {
     # elevated_password = "${var.install_password}"
     # elevated_user     = "${var.install_user}"
-    pause_before     = "2m0s"
+    pause_before     = "1m0s"
     environment_vars = ["IMAGE_FOLDER=${var.image_folder}"]
     scripts          = [
       # "${path.root}/../../packer/scripts/build/Install-Wix.ps1",
